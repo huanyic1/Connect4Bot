@@ -4,6 +4,9 @@ import numpy as np
 import math
 import copy
 from NeuralNet import NNQ
+import main
+import time
+
 class Player():
     convert= {1: "O", 2: "X"}
     oneRewards = json.load(open('p1Rewards.json'))
@@ -70,7 +73,14 @@ class miniMaxBot(Player):
         super().__init__(turn)
 
     def makeMove(self, board):
+        start = time.time()
         _, place = self.minimax(board, 5, self.turn == 1, float("-inf"), float("inf"))
+        end = time.time()
+        print("Time elapsed for python", end - start)
+        start = time.time()
+        _, place = main.minimax(list(board.flatten()), 5, self.turn == 1, -20, 20)
+        end = time.time()
+        print("Time elapsed for cython", end-start)
         return place
 
     """
