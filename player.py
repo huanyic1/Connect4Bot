@@ -5,6 +5,7 @@ import math
 import copy
 from NeuralNet import NNQ
 import main
+import mainWithMemo
 import time
 
 class Player():
@@ -73,20 +74,35 @@ class miniMaxBot(Player):
         super().__init__(turn)
 
     def makeMove(self, board):
+
         start = time.time()
-        _, place = self.minimax(board, 5, self.turn == 1, float("-inf"), float("inf"))
+        seen = {}
+        _, place = self.minimax(board, 5, self.turn == 1, float("-inf"), float("inf"), seen)
         end = time.time()
-        print("Time elapsed for python", end - start)
+        print("Time elapsed for python with memoization", end - start)
+
         start = time.time()
-        _, place = main.minimax(list(board.flatten()), 5, self.turn == 1, -20, 20)
+        _, place = self.minimax2(board, 5, self.turn == 1, float("-inf"), float("inf"))
         end = time.time()
-        print("Time elapsed for cython", end-start)
+        print("Time elapsed for python without memoization", end - start)
+
+        start = time.time()
+        _, place = main.minimax(list(board.flatten()), 7, self.turn == 1, -20, 20)
+        end = time.time()
+        print("Time elapsed for cython without memo", end-start)
+
+        seen2 = {}
+        start = time.time()
+        _, place = mainWithMemo.minimax(list(board.flatten()), 7, self.turn == 1, -20, 20, seen2)
+        end = time.time()
+        print("Time elapsed for cython with memo", end-start)
+
         return place
 
     """
     Takes in board, returns (value, location)
     """
-    def minimax(self, board, depth, maximizingPlayer, alpha, beta):
+    def minimax(self, board, depth, maximizingPlayer, alpha, beta, seen):
         discountFactor = 0.99 # for prioritizing faster wins, not sure if want to implement
         check = self.check_win(board)
         if depth == 0 or check:
@@ -106,7 +122,12 @@ class miniMaxBot(Player):
                     continue
                 newBoard = copy.deepcopy(board)
                 self.make_move(child, newBoard, 1)
-                eval, _ = self.minimax(newBoard, depth-1, False, alpha, beta)
+                strBoard = str(newBoard)
+                if strBoard in seen: 
+                    eval = seen[strBoard]
+                else:
+                    eval, _ = self.minimax(newBoard, depth-1, False, alpha, beta, seen)
+                    seen[strBoard] = eval
                 if eval > maxEval:
                     maxEval = eval
                     maxPlace = child
@@ -122,7 +143,57 @@ class miniMaxBot(Player):
                     continue
                 newBoard = copy.deepcopy(board)
                 self.make_move(child, newBoard, 2)
-                eval, _ = self.minimax(newBoard, depth-1, True, alpha, beta)
+                strBoard = str(newBoard)
+                if strBoard in seen: 
+                    eval = seen[strBoard]
+                else:
+                    eval, _ = self.minimax(newBoard, depth-1, True, alpha, beta, seen)
+                    seen[strBoard] = eval
+                if eval < minEval:
+                    minEval = eval
+                    minPlace = child
+                beta = min(beta, eval)
+                if beta<= alpha:
+                    break
+            return (discountFactor*minEval, minPlace)
+        
+    def minimax2(self, board, depth, maximizingPlayer, alpha, beta):
+        discountFactor = 0.99 # for prioritizing faster wins, not sure if want to implement
+        check = self.check_win(board)
+        if depth == 0 or check:
+            if check == 1: 
+                return (10, None)
+            elif check == 2:
+                return (-10, None)
+            else:
+                return (0, None)
+        
+        children = [3, 4, 2, 5, 1, 6, 0] # naturally want to explore middle first
+        if maximizingPlayer:
+            maxEval = float("-inf")
+            maxPlace = None 
+            for child in children:
+                if board[0][child]!=0: 
+                    continue
+                newBoard = copy.deepcopy(board)
+                self.make_move(child, newBoard, 1)
+                eval, _ = self.minimax2(newBoard, depth-1, False, alpha, beta)
+                if eval > maxEval:
+                    maxEval = eval
+                    maxPlace = child
+                alpha = max(alpha, eval)
+                if beta<=alpha:
+                    break
+            return (discountFactor*maxEval, maxPlace)
+        else:
+            minEval = float("inf")
+            minPlace = None
+            for child in children:
+                if board[0][child]!=0: 
+                    continue
+                newBoard = copy.deepcopy(board)
+                self.make_move(child, newBoard, 2)
+                eval, _ = self.minimax2(newBoard, depth-1, True, alpha, beta)
                 if eval < minEval:
                     minEval = eval
                     minPlace = child
@@ -185,6 +256,7 @@ class miniMaxBot(Player):
                     turn -=1
                 last_move = (5-r, place)
                 return 
+
 
 
 testBoard = np.array([
