@@ -1,53 +1,88 @@
 import os
 import torch
-from torch import nn
-from torch.utils.data import DataLoader
+import torch.nn as nn
 from torch.optim import Adam
-from torchvision import datasets, transforms
+import torch.nn.functional as F
 import numpy as np
-import tensorflow as tf
-class NNQ(nn.Module): 
-    def __init__(self): 
-        super().__init__()
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        layers = [
-            nn.Linear(in_features=42, out_features=64),
-            nn.ReLU(), 
-            nn.Linear(in_features=64, out_features=128, bias=True),
-            nn.ReLU(), 
-            nn.Linear(in_features=128, out_features=7, bias=True)
-        ] 
-        self.model = nn.Sequential(*layers).to(self.device)
+import random
+import copy
+from math import exp, log
+import time
 
-        # initialize our optimizer. We'll use Adam
-        self.optimizer = Adam(self.parameters(), lr=1e-3)
-        self.load()
-        self.lossFunc = nn.CrossEntropyLoss()
-    
-    def save(self): 
-        torch.save(self.model.state_dict(), "NeuralNet.pt")
-    
-    def load(self): 
+class NNQ(nn.Module): # utilizing nn.Module
+    def __init__(self):
+        super(NNQ, self).__init__()
+        episodes = 1000000
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.model = nn.Sequential(
+            nn.Linear(42, 64),
+            nn.ReLU(),
+            nn.Linear(64, 128),
+            nn.ReLU(),
+            nn.Linear(128, 7)
+        )
+        self.memory = []
+        self.epsilon = .2
+        self.gamma = 0.9 # discount rate
+        self.epsilon_min = 0.01
+        self.epsilon_decay = exp((log(self.epsilon_min) - log(self.epsilon))/(0.8*episodes))
+
+
+    def save(self):
+      try:
+        torch.save(self.model.state_dict(), 'Connect4Weights.pt')
+        print("Model Saved successfully")
+      except Exception as err:
+        print("Couldn't save model")
+        print(err)
+
+    def load(self):
         try:
-            self.model.load_state_dict(torch.load("NeuralNet.pt")).eval()
-        except: 
+            content = torch.load('Connect4Weights.pt')
+            self.model.load_state_dict(content)
+            print("model loaded successfully")
+        except Exception as err:
             print("No model found, initializing blank")
-    
-    def train(self, board, reward): 
-        flattenedBoard = board.flatten()
-        tensor1 = tf.convert_to_tensor(flattenedBoard)
-        predictedReward = self.model(tensor1)
-        loss = self.lossFunc(predictedReward, reward)
-        self.optimizer.zero_grad()
-        loss.backward()
-        self.optimizer.step()
-        return loss
+            print(err)
+
+    def clear(self):
+        self.memory = []
+
+    def addState(self, state, action, nextState, reward, done):
+        self.memory.append((state, action, nextState, reward, done))
 
     def forward(self, board):
-        return self.model(tf.convert_to_tensor(board.flatten()))
+        return self.model(torch.from_numpy(board.flatten()).float())
 
-if __name__ == '__main__':
-    neuralNet = NNQ()
-    board = np.zeros((6,7))
-    neuralNet.train(board, 0)
-       
+    def train(self, optimizer, loss_fn, batchSize):
+        #minibatch = random.sample(self.memory, batchSize)
+        finalReward = 0
+        counter = 0
+        discountFactor = .8
+        while self.memory:
+          state, action, nextState, reward, done = self.memory.pop()
+          if counter == 0:
+            finalReward = reward
+          if reward == 0:
+            reward = discountFactor**counter * finalReward
+        # for state, action, nextState, done in self.memory:
+        #   target = reward
+        #   if not done:
+        #       target = reward + self.gamma * torch.max(self.forward(nextState)).item()
+          predicted = self.forward(state)
+          actual = torch.clone(predicted)
+          actual[action] = actual[action] * (1-self.gamma) + reward * self.gamma
+          loss = loss_fn(predicted, actual)
+          optimizer.zero_grad()
+          loss.backward()
+          optimizer.step()
+          counter+=1
+        if self.epsilon > self.epsilon_min:
+          self.epsilon *= self.epsilon_decay
+        # self.memory = []
+
+
+
+
+
+

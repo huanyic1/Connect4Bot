@@ -17,6 +17,8 @@ class Connect4:
         self.convert= {1: "O", 2: "X"}
         self.player1 = Player(1) #Player(1) #Change whether playing against AI or bot
         self.player2 = miniMaxBot(2) 
+        #self.player2 = DeepQLearnBot(2)
+        self.player2.model.load()
         self.last_move = None
 
 
