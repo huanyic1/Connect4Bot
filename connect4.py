@@ -15,11 +15,15 @@ class Connect4:
         self.board = np.zeros((6,7))
         self.turn = 1 # flips between 1 and 2
         self.convert= {1: "O", 2: "X"}
-        self.player1 = Player(1) #Player(1) #Change whether playing against AI or bot
-        self.player2 = miniMaxBot(2) 
-        #self.player2 = DeepQLearnBot(2)
+        self.player1 = Player(1) #miniMaxBot(1, 10)
+        self.player2 = DeepQLearnBot(2, False)
         self.player2.model.load()
         self.last_move = None
+
+    def reset(self):
+      self.board = np.zeros((6,7))
+      self.turn = 1
+      self.last_move = None
 
 
     def __str__(self): 

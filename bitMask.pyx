@@ -51,7 +51,7 @@ cdef (double, int) minimax(long position, long mask, int depth, bint maximizingP
             if filled(mask, child): 
                 continue
             newPosition, newMask = bitMaskMakeMove(position, mask, child)
-            newBoard = (newPosition, newMask)
+            newBoard = (newPosition, newMask, depth)
             if newBoard in seen:
                 eval = seen[newBoard]
             else:
@@ -72,7 +72,7 @@ cdef (double, int) minimax(long position, long mask, int depth, bint maximizingP
             if filled(mask, child): 
                 continue
             newPosition, newMask = bitMaskMakeMove(position, mask, child)
-            newBoard = (newPosition, newMask)
+            newBoard = (newPosition, newMask, depth)
             if newBoard in seen: 
                 eval = seen[newBoard]
             else:

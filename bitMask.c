@@ -1740,10 +1740,11 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
   PyObject *__pyx_t_11 = NULL;
   PyObject *__pyx_t_12 = NULL;
   PyObject *__pyx_t_13 = NULL;
-  double __pyx_t_14;
-  int __pyx_t_15;
-  double __pyx_t_16;
+  PyObject *__pyx_t_14 = NULL;
+  double __pyx_t_15;
+  int __pyx_t_16;
   double __pyx_t_17;
+  double __pyx_t_18;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2023,7 +2024,7 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
  *             if filled(mask, child):
  *                 continue             # <<<<<<<<<<<<<<
  *             newPosition, newMask = bitMaskMakeMove(position, mask, child)
- *             newBoard = (newPosition, newMask)
+ *             newBoard = (newPosition, newMask, depth)
  */
         goto __pyx_L13_continue;
 
@@ -2040,7 +2041,7 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
  *             if filled(mask, child):
  *                 continue
  *             newPosition, newMask = bitMaskMakeMove(position, mask, child)             # <<<<<<<<<<<<<<
- *             newBoard = (newPosition, newMask)
+ *             newBoard = (newPosition, newMask, depth)
  *             if newBoard in seen:
  */
       __pyx_t_8 = __pyx_f_7bitMask_bitMaskMakeMove(__pyx_v_position, __pyx_v_mask, __pyx_v_child);
@@ -2052,7 +2053,7 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
       /* "bitMask.pyx":54
  *                 continue
  *             newPosition, newMask = bitMaskMakeMove(position, mask, child)
- *             newBoard = (newPosition, newMask)             # <<<<<<<<<<<<<<
+ *             newBoard = (newPosition, newMask, depth)             # <<<<<<<<<<<<<<
  *             if newBoard in seen:
  *                 eval = seen[newBoard]
  */
@@ -2060,20 +2061,25 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
       __Pyx_GOTREF(__pyx_t_11);
       __pyx_t_12 = __Pyx_PyInt_From_long(__pyx_v_newMask); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 54, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_13 = PyTuple_New(2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 54, __pyx_L1_error)
+      __pyx_t_13 = __Pyx_PyInt_From_int(__pyx_v_depth); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 54, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
+      __pyx_t_14 = PyTuple_New(3); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 54, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_14);
       __Pyx_GIVEREF(__pyx_t_11);
-      PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_11);
+      PyTuple_SET_ITEM(__pyx_t_14, 0, __pyx_t_11);
       __Pyx_GIVEREF(__pyx_t_12);
-      PyTuple_SET_ITEM(__pyx_t_13, 1, __pyx_t_12);
+      PyTuple_SET_ITEM(__pyx_t_14, 1, __pyx_t_12);
+      __Pyx_GIVEREF(__pyx_t_13);
+      PyTuple_SET_ITEM(__pyx_t_14, 2, __pyx_t_13);
       __pyx_t_11 = 0;
       __pyx_t_12 = 0;
-      __Pyx_XDECREF_SET(__pyx_v_newBoard, ((PyObject*)__pyx_t_13));
       __pyx_t_13 = 0;
+      __Pyx_XDECREF_SET(__pyx_v_newBoard, ((PyObject*)__pyx_t_14));
+      __pyx_t_14 = 0;
 
       /* "bitMask.pyx":55
  *             newPosition, newMask = bitMaskMakeMove(position, mask, child)
- *             newBoard = (newPosition, newMask)
+ *             newBoard = (newPosition, newMask, depth)
  *             if newBoard in seen:             # <<<<<<<<<<<<<<
  *                 eval = seen[newBoard]
  *             else:
@@ -2087,7 +2093,7 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
       if (__pyx_t_3) {
 
         /* "bitMask.pyx":56
- *             newBoard = (newPosition, newMask)
+ *             newBoard = (newPosition, newMask, depth)
  *             if newBoard in seen:
  *                 eval = seen[newBoard]             # <<<<<<<<<<<<<<
  *             else:
@@ -2097,15 +2103,15 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           __PYX_ERR(0, 56, __pyx_L1_error)
         }
-        __pyx_t_13 = __Pyx_PyDict_GetItem(__pyx_v_seen, __pyx_v_newBoard); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 56, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_13);
-        __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_13); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 56, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-        __pyx_v_eval = __pyx_t_14;
+        __pyx_t_14 = __Pyx_PyDict_GetItem(__pyx_v_seen, __pyx_v_newBoard); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 56, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_14);
+        __pyx_t_15 = __pyx_PyFloat_AsDouble(__pyx_t_14); if (unlikely((__pyx_t_15 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 56, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+        __pyx_v_eval = __pyx_t_15;
 
         /* "bitMask.pyx":55
  *             newPosition, newMask = bitMaskMakeMove(position, mask, child)
- *             newBoard = (newPosition, newMask)
+ *             newBoard = (newPosition, newMask, depth)
  *             if newBoard in seen:             # <<<<<<<<<<<<<<
  *                 eval = seen[newBoard]
  *             else:
@@ -2122,10 +2128,10 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
  */
       /*else*/ {
         __pyx_t_4 = __pyx_f_7bitMask_minimax(__pyx_v_newPosition, __pyx_v_newMask, (__pyx_v_depth - 1), 0, __pyx_v_alpha, __pyx_v_beta, __pyx_v_seen);
-        __pyx_t_14 = __pyx_t_4.f0;
-        __pyx_t_15 = __pyx_t_4.f1;
-        __pyx_v_eval = __pyx_t_14;
-        __pyx_v_evalPlace = __pyx_t_15;
+        __pyx_t_15 = __pyx_t_4.f0;
+        __pyx_t_16 = __pyx_t_4.f1;
+        __pyx_v_eval = __pyx_t_15;
+        __pyx_v_evalPlace = __pyx_t_16;
 
         /* "bitMask.pyx":59
  *             else:
@@ -2134,14 +2140,14 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
  *             if eval > maxEval:
  *                 maxEval = eval
  */
-        __pyx_t_13 = PyFloat_FromDouble(__pyx_v_eval); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 59, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_13);
+        __pyx_t_14 = PyFloat_FromDouble(__pyx_v_eval); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 59, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_14);
         if (unlikely(__pyx_v_seen == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           __PYX_ERR(0, 59, __pyx_L1_error)
         }
-        if (unlikely(PyDict_SetItem(__pyx_v_seen, __pyx_v_newBoard, __pyx_t_13) < 0)) __PYX_ERR(0, 59, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+        if (unlikely(PyDict_SetItem(__pyx_v_seen, __pyx_v_newBoard, __pyx_t_14) < 0)) __PYX_ERR(0, 59, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
       }
       __pyx_L16:;
 
@@ -2189,14 +2195,14 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
  *             if beta<=alpha:
  *                 break
  */
-      __pyx_t_14 = __pyx_v_eval;
-      __pyx_t_16 = __pyx_v_alpha;
-      if (((__pyx_t_14 > __pyx_t_16) != 0)) {
-        __pyx_t_17 = __pyx_t_14;
+      __pyx_t_15 = __pyx_v_eval;
+      __pyx_t_17 = __pyx_v_alpha;
+      if (((__pyx_t_15 > __pyx_t_17) != 0)) {
+        __pyx_t_18 = __pyx_t_15;
       } else {
-        __pyx_t_17 = __pyx_t_16;
+        __pyx_t_18 = __pyx_t_17;
       }
-      __pyx_v_alpha = __pyx_t_17;
+      __pyx_v_alpha = __pyx_t_18;
 
       /* "bitMask.pyx":64
  *                 maxPlace = child
@@ -2296,7 +2302,7 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
  *             if filled(mask, child):
  *                 continue             # <<<<<<<<<<<<<<
  *             newPosition, newMask = bitMaskMakeMove(position, mask, child)
- *             newBoard = (newPosition, newMask)
+ *             newBoard = (newPosition, newMask, depth)
  */
         goto __pyx_L19_continue;
 
@@ -2313,7 +2319,7 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
  *             if filled(mask, child):
  *                 continue
  *             newPosition, newMask = bitMaskMakeMove(position, mask, child)             # <<<<<<<<<<<<<<
- *             newBoard = (newPosition, newMask)
+ *             newBoard = (newPosition, newMask, depth)
  *             if newBoard in seen:
  */
       __pyx_t_8 = __pyx_f_7bitMask_bitMaskMakeMove(__pyx_v_position, __pyx_v_mask, __pyx_v_child);
@@ -2325,20 +2331,25 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
       /* "bitMask.pyx":75
  *                 continue
  *             newPosition, newMask = bitMaskMakeMove(position, mask, child)
- *             newBoard = (newPosition, newMask)             # <<<<<<<<<<<<<<
+ *             newBoard = (newPosition, newMask, depth)             # <<<<<<<<<<<<<<
  *             if newBoard in seen:
  *                 eval = seen[newBoard]
  */
-      __pyx_t_13 = __Pyx_PyInt_From_long(__pyx_v_newPosition); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 75, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyInt_From_long(__pyx_v_newPosition); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 75, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_14);
+      __pyx_t_13 = __Pyx_PyInt_From_long(__pyx_v_newMask); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 75, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
-      __pyx_t_12 = __Pyx_PyInt_From_long(__pyx_v_newMask); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 75, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_depth); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 75, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_11 = PyTuple_New(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 75, __pyx_L1_error)
+      __pyx_t_11 = PyTuple_New(3); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 75, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
+      __Pyx_GIVEREF(__pyx_t_14);
+      PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_14);
       __Pyx_GIVEREF(__pyx_t_13);
-      PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_13);
+      PyTuple_SET_ITEM(__pyx_t_11, 1, __pyx_t_13);
       __Pyx_GIVEREF(__pyx_t_12);
-      PyTuple_SET_ITEM(__pyx_t_11, 1, __pyx_t_12);
+      PyTuple_SET_ITEM(__pyx_t_11, 2, __pyx_t_12);
+      __pyx_t_14 = 0;
       __pyx_t_13 = 0;
       __pyx_t_12 = 0;
       __Pyx_XDECREF_SET(__pyx_v_newBoard, ((PyObject*)__pyx_t_11));
@@ -2346,7 +2357,7 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
 
       /* "bitMask.pyx":76
  *             newPosition, newMask = bitMaskMakeMove(position, mask, child)
- *             newBoard = (newPosition, newMask)
+ *             newBoard = (newPosition, newMask, depth)
  *             if newBoard in seen:             # <<<<<<<<<<<<<<
  *                 eval = seen[newBoard]
  *             else:
@@ -2360,7 +2371,7 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
       if (__pyx_t_2) {
 
         /* "bitMask.pyx":77
- *             newBoard = (newPosition, newMask)
+ *             newBoard = (newPosition, newMask, depth)
  *             if newBoard in seen:
  *                 eval = seen[newBoard]             # <<<<<<<<<<<<<<
  *             else:
@@ -2372,13 +2383,13 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
         }
         __pyx_t_11 = __Pyx_PyDict_GetItem(__pyx_v_seen, __pyx_v_newBoard); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 77, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
-        __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_11); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 77, __pyx_L1_error)
+        __pyx_t_18 = __pyx_PyFloat_AsDouble(__pyx_t_11); if (unlikely((__pyx_t_18 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 77, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-        __pyx_v_eval = __pyx_t_17;
+        __pyx_v_eval = __pyx_t_18;
 
         /* "bitMask.pyx":76
  *             newPosition, newMask = bitMaskMakeMove(position, mask, child)
- *             newBoard = (newPosition, newMask)
+ *             newBoard = (newPosition, newMask, depth)
  *             if newBoard in seen:             # <<<<<<<<<<<<<<
  *                 eval = seen[newBoard]
  *             else:
@@ -2395,10 +2406,10 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
  */
       /*else*/ {
         __pyx_t_4 = __pyx_f_7bitMask_minimax(__pyx_v_newPosition, __pyx_v_newMask, (__pyx_v_depth - 1), 1, __pyx_v_alpha, __pyx_v_beta, __pyx_v_seen);
-        __pyx_t_17 = __pyx_t_4.f0;
-        __pyx_t_15 = __pyx_t_4.f1;
-        __pyx_v_eval = __pyx_t_17;
-        __pyx_v_evalPlace = __pyx_t_15;
+        __pyx_t_18 = __pyx_t_4.f0;
+        __pyx_t_16 = __pyx_t_4.f1;
+        __pyx_v_eval = __pyx_t_18;
+        __pyx_v_evalPlace = __pyx_t_16;
 
         /* "bitMask.pyx":80
  *             else:
@@ -2462,14 +2473,14 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
  *             if beta<= alpha:
  *                 break
  */
-      __pyx_t_17 = __pyx_v_eval;
-      __pyx_t_14 = __pyx_v_beta;
-      if (((__pyx_t_17 < __pyx_t_14) != 0)) {
-        __pyx_t_16 = __pyx_t_17;
+      __pyx_t_18 = __pyx_v_eval;
+      __pyx_t_15 = __pyx_v_beta;
+      if (((__pyx_t_18 < __pyx_t_15) != 0)) {
+        __pyx_t_17 = __pyx_t_18;
       } else {
-        __pyx_t_16 = __pyx_t_14;
+        __pyx_t_17 = __pyx_t_15;
       }
-      __pyx_v_beta = __pyx_t_16;
+      __pyx_v_beta = __pyx_t_17;
 
       /* "bitMask.pyx":85
  *                 minPlace = child
@@ -2528,6 +2539,7 @@ static __pyx_ctuple_double__and_int __pyx_f_7bitMask_minimax(long __pyx_v_positi
   __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_12);
   __Pyx_XDECREF(__pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_14);
   __Pyx_WriteUnraisable("bitMask.minimax", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __Pyx_pretend_to_initialize(&__pyx_r);
   __pyx_L0:;

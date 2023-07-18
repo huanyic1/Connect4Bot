@@ -12,7 +12,7 @@ import time
 class NNQ(nn.Module): # utilizing nn.Module
     def __init__(self):
         super(NNQ, self).__init__()
-        episodes = 1000000
+        episodes = 100000
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = nn.Sequential(
             nn.Linear(42, 64),
@@ -30,7 +30,7 @@ class NNQ(nn.Module): # utilizing nn.Module
 
     def save(self):
       try:
-        torch.save(self.model.state_dict(), 'Connect4Weights.pt')
+        torch.save(self.model.state_dict(), 'FinalConnect4Weights.pth')
         print("Model Saved successfully")
       except Exception as err:
         print("Couldn't save model")
@@ -38,7 +38,7 @@ class NNQ(nn.Module): # utilizing nn.Module
 
     def load(self):
         try:
-            content = torch.load('Connect4Weights.pt')
+            content = torch.load('FinalConnect4Weights.pth')
             self.model.load_state_dict(content)
             print("model loaded successfully")
         except Exception as err:

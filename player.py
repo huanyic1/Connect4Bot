@@ -58,13 +58,14 @@ class RandomBot(Player): # need to also be able to write to and read from weight
         return avail
 
 class DeepQLearnBot(RandomBot):
-    def __init__(self, turn):
+    def __init__(self, turn, training):
         self.turn = turn
         self.model = NNQ()
+        self.training = training
 
 
     def makeMove(self, board):
-        epsilon = self.model.epsilon
+        epsilon = self.model.epsilon if self.training else 0
         action_decision = random.choices(['model','random'], weights = [1 - epsilon, epsilon])[0]
         if action_decision == 'random':
             return super().makeMove(board)
@@ -72,12 +73,13 @@ class DeepQLearnBot(RandomBot):
             return torch.argmax(self.model.forward(board))
 
 class miniMaxBot(Player):
-    def __init__(self, turn): 
+    def __init__(self, turn, depth): 
         super().__init__(turn)
+        self.depth = depth
+        self.seen = {}
 
     def makeMove(self, board):
-        seen = {}
-        _, place = bitMask.convertAndCall(board, 10, self.turn == 1, -20, 20, seen, self.turn)
+        _, place = bitMask.convertAndCall(board, self.depth, self.turn == 1, -20, 20, self.seen, self.turn)
         return place
 
     # def get_position_mask_bitmap(self, board, player):
