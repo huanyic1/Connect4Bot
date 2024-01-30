@@ -298,18 +298,3 @@ class miniMaxBot(Player):
     #     # print(place)
 
     #     # print("Time elapsed for cython with bitmask convert", end-start)
-
-# def useless():
-#     testBoard = np.array([
-#         [0,0,0,0,0,0,0], 
-#         [0,0,0,2,0,0,0],
-#         [0,0,1,1,0,0,0],
-#         [0,0,2,1,0,0,0],
-#         [0,0,2,2,1,0,0],
-#         [0,0,2,1,1,2,0]
-#     ])
-#     agent = miniMaxBot(1)
-#     print(agent.makeMove(testBoard))
-#     pos, mask = agent.get_position_mask_bitmap(testBoard, 1)
-#     print(pos, mask)
-#     print(bitMask.convertAndCall(testBoard, 1))

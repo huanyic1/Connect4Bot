@@ -11,13 +11,18 @@ import json
 import copy
 
 class Connect4: 
-    def __init__(self):
+    def __init__(self, player2):
         self.board = np.zeros((6,7))
         self.turn = 1 # flips between 1 and 2
         self.convert= {1: "O", 2: "X"}
         self.player1 = Player(1) #miniMaxBot(1, 10)
-        self.player2 = DeepQLearnBot(2, False)
-        self.player2.model.load()
+        if player2 == "Neural Net": 
+            self.player2 = DeepQLearnBot(2, False)
+            self.player2.model.load()
+        elif player2 == "Minimax": 
+            self.player2 = miniMaxBot(2, 12)
+        else: 
+            self.player2 = Player(2)
         self.last_move = None
 
     def reset(self):
@@ -108,8 +113,8 @@ class Connect4:
         if filled == 42: 
             return 3
 
-def runGame(printGame = True):
-    game = Connect4()
+def runGame(printGame = True, player2 = "Player"):
+    game = Connect4(player2)
     if printGame: 
         print(game)
     while True: 
@@ -142,13 +147,14 @@ def main(args):
     parser.add_argument("--games", default = 1, type = int)
     parser.add_argument('--print', action='store_true') # when it is training and the two bots are playing each other, no need to print board everytime. 
     parser.add_argument('--simulate', dest='print', action='store_false')
+    parser.add_argument('--player2')
     parser.set_defaults(print=True)
     arguments = parser.parse_args()
     player1Wins = 0
     player2Wins = 0
     ties = 0
     for _ in range(arguments.games):
-       res = runGame(arguments.print)
+       res = runGame(arguments.print, arguments.player2)
        if res == 1: player1Wins+=1
        if res == 2: player2Wins+=1
        if res == 3: ties+=1
