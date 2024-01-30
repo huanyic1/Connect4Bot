@@ -3,13 +3,6 @@ However, trained to store ~20000 states. Took up around 4 megabytes.
 Total amount of states is over 4 trillion, assuming scaling linearly, this would take 800 terrabytes of storage which I clearly don't have. 
 Now pivoting to attempt to use deep Q-learning. Where rewards are stored in a neural network instead. 
 Currently having it play against a random agent
-Will implement multi-agent reinforcement learning next
-Finally will do alpha-beta pruning
-
-
-Playing random bot against random bot, player 1 wins 55% of time (ran 5000 trials)
-Playing first iteration DNQ, player 1 wins 67% of time (also ran 5000 trials), epsilon at 0.5
-With Epsilon reduced to .1 (less exploring, more greedy), winning increased to 79.5% (Turns out this was because it would just keep picking same spot)
 
 Trained a pretty good neural net with Pytorch on google colab. However, it has been training against a random bot for over a million games. As a result, it converged to it just playing the same column over and over again. 
 
