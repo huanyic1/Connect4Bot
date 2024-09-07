@@ -1,13 +1,1 @@
-Originally planning on utilizing Q-Learning. 
-However, trained to store ~20000 states. Took up around 4 megabytes. 
-Total amount of states is over 4 trillion, assuming scaling linearly, this would take 800 terrabytes of storage which I clearly don't have. 
-Now pivoting to attempt to use deep Q-learning. Where rewards are stored in a neural network instead. 
-Currently having it play against a random agent
-
-Trained a pretty good neural net with Pytorch on google colab. However, it has been training against a random bot for over a million games. As a result, it converged to it just playing the same column over and over again. 
-
-To combat this, implemented a rudimentary minimax bot with alpha beta pruning. Having pytorch bot train against this now. However, very slow. Need to optimize more. Looking into cython. 
-
-Implementing memoization: Really only useful once start looking more moves ahead, i.e. 7 moves ahead
-
-After implementing bitmask, sped up significantly. Also, meant that we can hash ints directly, less time wasted converting numpy array to string
+Trained deep neural network against minimax algorithm. Notable optimizations included being written in Cython, alpha beta pruning, memoization, bitmapping, among others. 
